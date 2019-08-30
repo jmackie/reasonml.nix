@@ -11,7 +11,7 @@ let g:ale_fixers = {
 
 let g:LanguageClient_serverCommands = {
 \ 'reason': ['reason-language-server'],
-\ 'ocaml': ['ocamlmerlin-lsp', '--stdio'],
+\ 'ocaml': ['ocaml-language-server', '--stdio'],
 \}
 
 let g:LanguageClient_loggingFile = "LanguageClient.log"
