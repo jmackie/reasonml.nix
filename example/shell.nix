@@ -1,7 +1,7 @@
 { pkgs ? import ./../nixpkgs.nix { } }:
 let
   reasonml = import ./.. { inherit pkgs; };
-  bs-platform = reasonml.bucklescript.bs-platform { };
+  bs-platform = reasonml.bs-platform;
 
   ln-bs-platform = pkgs.writers.writeBashBin "ln-bs-platform" ''
     if [ -d node_modules ]; then 

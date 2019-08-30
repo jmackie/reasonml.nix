@@ -2,7 +2,12 @@
 
 rec {
   bucklescript = pkgs.callPackage ./bucklescript { };
-  bsansouci = pkgs.callPackage ./bsansouci { inherit (bucklescript) ocaml_BS; };
+  bs-platform = bucklescript.bs-platform { };
+  inherit (bucklescript) ocaml_BS;
+
+  bsansouci = pkgs.callPackage ./bsansouci { inherit ocaml_BS; };
+  bsb-native = bsansouci.bsb-native { };
+
   reason-language-server = pkgs.ocaml-ng.ocamlPackages_4_07.callPackage
     ./reason-language-server/release.nix { };
 
