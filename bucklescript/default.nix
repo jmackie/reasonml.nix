@@ -66,7 +66,7 @@ in rec {
   bs-platform = { ocaml ? ocaml_BS }:
     stdenv.mkDerivation {
       name = "bs-platform";
-      version = "5.1.1";
+      version = "5.0.6";
       src = with bucklescript-src;
         fetchgit {
           inherit name url rev sha256;

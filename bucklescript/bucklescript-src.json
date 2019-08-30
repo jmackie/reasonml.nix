@@ -1,7 +1,7 @@
 {
-  "url": "https://github.com/bucklescript/bucklescript",
-  "rev": "9d8c9c035003122d96e78bbdb9581c99e41942fd",
-  "date": "2019-08-28T19:44:14+08:00",
-  "sha256": "15ncwh38azc7w4dky9y7xq5kds1m667hyydimm155qf7ihlz2rn1",
+  "url": "https://github.com/BuckleScript/bucklescript",
+  "rev": "17b16dc12a6cb52401081b5ae70f306f65fe6240",
+  "date": "2019-07-01T09:38:26-04:00",
+  "sha256": "0a66n2icsfmr2c4vcv600943yb7k9rny2df43kbgc2zcbchqr689",
   "fetchSubmodules": false
 }
