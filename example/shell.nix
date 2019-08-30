@@ -25,7 +25,7 @@ in pkgs.mkShell {
     pkgs.reason
     pkgs.ocamlformat
     reasonml.reason-language-server
-    reasonml.bucklescript.ocaml_BS
+    #reasonml.bucklescript.ocaml_BS
     #pkgs.ocaml-ng.ocamlPackages_4_02.ocaml
     #pkgs.nodePackages_10_x.ocaml-language-server
     #merlin_2-5-4
