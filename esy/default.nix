@@ -22,16 +22,22 @@ let
     };
 
     buildInputs = [ stdenv.cc.cc.lib ]; # libstdc++.so.6
-    libPath = lib.makeLibraryPath buildInputs;
 
     buildCommand = ''
       cp -r --no-preserve=mode,ownership,timestamps $src $out
       exe=$out/esySolveCudfCommand.exe
-      mv $out/platform-linux/esySolveCudfCommand.exe $exe
-      chmod u+w $exe
-      patchelf --interpreter ${stdenv.cc.bintools.dynamicLinker} --set-rpath ${libPath} $exe
-      chmod u-w $exe
-      chmod 555 $exe
+      ${if stdenv.isDarwin then ''
+        mv $out/platform-darwin/esySolveCudfCommand.exe $exe
+        chmod 555 $exe
+      '' else ''
+        mv $out/platform-linux/esySolveCudfCommand.exe $exe
+        chmod u+w $exe
+        patchelf --interpreter ${stdenv.cc.bintools.dynamicLinker} --set-rpath ${
+          lib.makeLibraryPath buildInputs
+        } $exe
+        chmod u-w $exe
+        chmod 555 $exe
+      ''}
     '';
   };
 in stdenv.mkDerivation rec {
