@@ -1,20 +1,23 @@
-{ fetchgit, buildDunePackage, ppx_tools_versioned, ocaml-migrate-parsetree
-, reason }:
-let
-  reason-language-server-src = {
-    name = "jaredly-reason-language-server";
-  } // builtins.fromJSON (builtins.readFile ./reason-language-server-src.json);
-
-in buildDunePackage rec {
-  pname = "reason-language-server";
+{ stdenv, fetchurl, unzip }:
+stdenv.mkDerivation rec {
+  name = "reason-language-server";
   version = "1.7.1";
-  src = with reason-language-server-src;
-    fetchgit {
-      inherit name url rev sha256;
-      fetchSubmodules = false;
-    };
-  buildInputs = [ ppx_tools_versioned ocaml-migrate-parsetree reason ];
-  postInstall = ''
-    ln -vs $out/bin/Bin $out/bin/reason-language-server
-  '';
+  src = fetchurl {
+    url =
+      "https://github.com/jaredly/reason-language-server/releases/download/${version}/rls-linux.zip";
+    sha256 = "18bvadkql0r71q4a6ywcqz184sig770pps32vz9r99y5anj1cxhb";
+  };
+  buildInputs = [ unzip ];
+  buildCommand = ''
+    unzip $src
+    mkdir -p $out/bin
+    EXE=$out/bin/${name}
+    install -D -m555 rls-linux/${name} $EXE
+    ${if stdenv.isDarwin then
+      ""
+    else ''
+      chmod u+w $EXE
+      patchelf --interpreter ${stdenv.cc.bintools.dynamicLinker} $EXE
+      chmod u-w $EXE
+    ''}'';
 }

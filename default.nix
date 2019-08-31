@@ -8,8 +8,8 @@ rec {
   bsansouci = pkgs.callPackage ./bsansouci { inherit ocaml_BS; };
   bsb-native = bsansouci.bsb-native { };
 
-  reason-language-server = pkgs.ocaml-ng.ocamlPackages_4_07.callPackage
-    ./reason-language-server/release.nix { };
+  reason-language-server =
+    pkgs.ocaml-ng.ocamlPackages_4_07.callPackage ./reason-language-server { };
 
   # Sadly this won't (currently) build with ocaml 4.2.x, so can't be used 
   # alongside the reason-language-server for *.ml code
