@@ -13,8 +13,11 @@ stdenv.mkDerivation rec {
     mkdir -p $out/bin
     EXE=$out/bin/${name}
     install -D -m555 rls-linux/${name} $EXE
-    chmod u+w $EXE
-    patchelf --interpreter ${stdenv.cc.bintools.dynamicLinker} $EXE
-    chmod u-w $EXE
-  '';
+    ${if stdenv.isDarwin then
+      ""
+    else ''
+      chmod u+w $EXE
+      patchelf --interpreter ${stdenv.cc.bintools.dynamicLinker} $EXE
+      chmod u-w $EXE
+    ''}'';
 }
