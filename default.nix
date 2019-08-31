@@ -15,4 +15,8 @@ rec {
   # alongside the reason-language-server for *.ml code
   # https://github.com/ocaml/merlin/issues/937
   merlin-lsp = pkgs.ocaml-ng.ocamlPackages_4_07.callPackage ./merlin-lsp { };
+
+  # Currently snagged on:
+  # https://github.com/esy/esy/pull/962
+  esy = pkgs.callPackages ./esy { };
 }
