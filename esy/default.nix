@@ -49,6 +49,7 @@ in buildFHSUserEnv {
     pkgs.m4
     pkgs.gnumake
     pkgs.which
+    pkgs.git
     # NOTE: there are probably more things that need to go here...
   ]);
   runScript = "esy";
