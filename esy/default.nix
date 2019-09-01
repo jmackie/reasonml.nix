@@ -48,7 +48,6 @@ in buildFHSUserEnv ((attrs: attrs // overrideFHSUserEnv attrs) ({
     pkgs.curl
     pkgs.gcc # pkgs.clang?
     pkgs.m4
-    pkgs.cmake
     pkgs.gnumake
     pkgs.which
     pkgs.git
