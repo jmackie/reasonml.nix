@@ -16,7 +16,9 @@ rec {
   # https://github.com/ocaml/merlin/issues/937
   merlin-lsp = pkgs.ocaml-ng.ocamlPackages_4_07.callPackage ./merlin-lsp { };
 
-  # Currently snagged on:
-  # https://github.com/esy/esy/pull/962
-  esy = pkgs.callPackages ./esy { };
+  esy = pkgs.callPackage ./esy rec {
+    fetchNpmRelease = pkgs.callPackage ./esy/fetchNpmRelease.nix { };
+    esy-solve-cudf =
+      pkgs.callPackage ./esy/esy-solve-cudf.nix { inherit fetchNpmRelease; };
+  };
 }
