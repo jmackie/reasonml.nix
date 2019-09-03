@@ -19,8 +19,13 @@ rec {
     pkgs.ocaml-ng."ocamlPackages_${version}".callPackage merlin-lsp-package { };
   merlin-lsp-package = ./merlin-lsp;
 
-  esy = esy' pkgs.lib.id;
-  esy' = pkgs.callPackage ./esy rec {
+  # not a great idea
+  esy = esy-env {
+    name = "esy";
+    runScript = "esy";
+  };
+
+  esy-env = pkgs.callPackage ./esy rec {
     fetchNpmRelease = pkgs.callPackage ./esy/fetchNpmRelease.nix { };
     esy-solve-cudf =
       pkgs.callPackage ./esy/esy-solve-cudf.nix { inherit fetchNpmRelease; };

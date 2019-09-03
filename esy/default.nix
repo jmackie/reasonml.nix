@@ -1,6 +1,5 @@
 { stdenv, lib, buildFHSUserEnv, fetchgit, fetchNpmRelease, makeWrapper
 , esy-solve-cudf }:
-overrideFHSUserEnv:
 let
   esyRelease = stdenv.mkDerivation rec {
     name = "esy-npm";
@@ -38,29 +37,27 @@ let
   };
 
   # https://github.com/esy/esy/pull/962
-in buildFHSUserEnv ((attrs: attrs // overrideFHSUserEnv attrs) ({
-  name = "esy";
-  targetPkgs = pkgs: [
-    esyRelease
+in { name ? "esy-env", targetPkgs ? lib.const [ ], multiPkgs ? lib.const [ ]
+, runScript ? "bash", ... }@args:
+buildFHSUserEnv (args // {
+  inherit name runScript;
+  targetPkgs = pkgs:
+    lib.lists.unique (targetPkgs pkgs ++ [
+      esyRelease
 
-    pkgs.coreutils
-    pkgs.binutils
-    pkgs.curl
-    pkgs.cacert # for https
-    pkgs.perl # for shasum
-    pkgs.patch
-    pkgs.gcc # pkgs.clang?
-    pkgs.m4
-    pkgs.gnumake
-    pkgs.which
-    pkgs.git
-    # NOTE: there are probably more things that need to go here...
-
-  ];
-  multiPkgs = pkgs: [ ];
-  runScript = "esy";
-
-  #profile = ''
-  #  export ESY__LOG=debug
-  #'';
-}))
+      pkgs.coreutils
+      pkgs.binutils
+      pkgs.curl
+      pkgs.cacert # for https
+      pkgs.perl # for shasum
+      pkgs.patch
+      pkgs.gcc # or pkgs.clang?
+      pkgs.m4
+      pkgs.gnumake
+      pkgs.which
+      pkgs.git
+      # NOTE: there are probably more things that need to go here...
+    ]);
+  multiPkgs = pkgs: multiPkgs pkgs; # ?
+  #profile = "export ESY__LOG=debug";
+})
