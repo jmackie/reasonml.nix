@@ -46,6 +46,9 @@ in buildFHSUserEnv ((attrs: attrs // overrideFHSUserEnv attrs) ({
     pkgs.coreutils
     pkgs.binutils
     pkgs.curl
+    pkgs.cacert # for https
+    pkgs.perl # for shasum
+    pkgs.patch
     pkgs.gcc # pkgs.clang?
     pkgs.m4
     pkgs.gnumake
