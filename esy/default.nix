@@ -1,5 +1,5 @@
 { stdenv, lib, buildFHSUserEnv, fetchgit, fetchNpmRelease, makeWrapper
-, esy-solve-cudf }:
+, esy-solve-cudf, cacert }:
 overrideFHSUserEnv:
 let
   esyRelease = stdenv.mkDerivation rec {
@@ -37,27 +37,52 @@ let
     '';
   };
 
+  bootstrap = buildFHSUserEnv ((attrs: attrs // overrideFHSUserEnv attrs) ({
+    name = "esy-bootstrap";
+    targetPkgs = pkgs: [
+      esyRelease
+
+      pkgs.coreutils
+      pkgs.binutils
+      pkgs.curl
+      pkgs.cacert # for https
+      pkgs.perl # for shasum
+      pkgs.patch
+      pkgs.gcc # pkgs.clang?
+      pkgs.m4
+      pkgs.gnumake
+      pkgs.which
+      pkgs.git
+      # NOTE: there are probably more things that need to go here...
+
+    ];
+    multiPkgs = pkgs: [ ];
+    runScript = "esy";
+
+    #profile = ''
+    #  export ESY__LOG=debug
+    #'';
+  }));
+
+  esySrc = builtins.fromJSON (builtins.readFile ./esy-src.json);
+
+in stdenv.mkDerivation rec {
+  name = "esy-${esySrc.rev}";
+  src = fetchgit {
+    inherit (esySrc) url rev sha256;
+    fetchSubmodules = false;
+  };
+  # TODO: patch src
   # https://github.com/esy/esy/pull/962
-in buildFHSUserEnv ((attrs: attrs // overrideFHSUserEnv attrs) ({
-  name = "esy";
-  targetPkgs = pkgs: [
-    esyRelease
+  buildInputs = [ cacert ];
+  buildPhase = ''
+    export ESY__LOG=debug
+    export ESY__PREFIX=$(pwd)
+    ${bootstrap}/bin/esy-bootstrap install
+    ${bootstrap}/bin/esy-bootstrap build
+  '';
 
-    pkgs.coreutils
-    pkgs.binutils
-    pkgs.curl
-    pkgs.gcc # pkgs.clang?
-    pkgs.m4
-    pkgs.gnumake
-    pkgs.which
-    pkgs.git
-    # NOTE: there are probably more things that need to go here...
-
-  ];
-  multiPkgs = pkgs: [ ];
-  runScript = "esy";
-
-  #profile = ''
-  #  export ESY__LOG=debug
-  #'';
-}))
+  outputHashAlgo = "sha256";
+  outputHashMode = "recursive";
+  outputHash = esySrc.sha256;
+}
