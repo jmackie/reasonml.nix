@@ -51,7 +51,6 @@ buildFHSUserEnv (args // {
       pkgs.cacert # for https
       pkgs.perl # for shasum
       pkgs.patch
-      pkgs.gcc # or pkgs.clang?
       pkgs.m4
       pkgs.gnumake
       pkgs.which
